@@ -23,11 +23,9 @@ app.get('/', (request, response) => {
   response.send('<h1>Hello World</h1>').end();
 });
 
-app.get('/api/notes', (request, response) => {
-  Note.find({})
-    .then((result) => {
-      response.json(result);
-    });
+app.get('/api/notes', async (request, response) => {
+  const notes = await Note.find({});
+  response.json(notes);
 });
 
 app.get('/api/notes/:id', (request, response, next) => {
@@ -61,17 +59,18 @@ app.put('/api/notes/:id', (request, response, next) => {
     });
 });
 
-app.delete('/api/notes/:id', (request, response, next) => {
+app.delete('/api/notes/:id', async (request, response, next) => {
   const { id } = request.params;
 
-  Note.findByIdAndDelete(id)
-    .then(() => {
-      response.status(204).end();
-    })
-    .catch((error) => next(error));
+  try {
+    await Note.findByIdAndDelete(id);
+    response.status(204).end();
+  } catch (err) {
+    next(err);
+  }
 });
 
-app.post('/api/notes', (request, response) => {
+app.post('/api/notes', async (request, response, next) => {
   const note = request.body;
 
   if (!note) {
@@ -94,10 +93,18 @@ app.post('/api/notes', (request, response) => {
     important: note.important || false,
   });
 
-  newNote.save()
-    .then((savedNote) => {
-      response.json(savedNote);
-    });
+  // newNote.save()
+  //   .then((savedNote) => {
+  //     response.json(savedNote);
+  //   })
+  //   .catch((err) => next(err));
+
+  try {
+    const savedNote = await newNote.save();
+    response.json(savedNote);
+  } catch (err) {
+    next(err);
+  }
 });
 
 app.use(notFound);
@@ -105,6 +112,8 @@ app.use(notFound);
 app.use(handleErrors);
 
 const { PORT } = process.env;
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+module.exports = { app, server };

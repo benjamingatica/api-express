@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
 
-// const connectionString = `mongodb+srv://benjamin:${pass}@cluster0.73igm.mongodb.net/api-express?retryWrites=true&w=majority`;
-const connectionString = process.env.MONGO_DB_URI;
+const { MONGO_DB_URI, MONGO_DB_URI_TEST, NODE_ENV } = process.env;
+const connectionString = NODE_ENV === 'test' ? MONGO_DB_URI_TEST : MONGO_DB_URI;
+
+console.log('connectionString: ', connectionString);
 
 mongoose.connect(connectionString, {
   useNewUrlParser: true,
