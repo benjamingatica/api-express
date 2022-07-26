@@ -1,14 +1,27 @@
+/* eslint-disable no-underscore-dangle */
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 const { server } = require('../index');
 const Note = require('../models/Note');
+const User = require('../models/User');
 const { initialNotes, api, getAllContentFromNotes } = require('./helpers');
 
 beforeEach(async () => {
+  await User.deleteMany({});
+
+  const passwordHash = await bcrypt.hash('pswd', 10);
+  const user = new User({ username: 'perro', passwordHash });
+  await user.save();
+
   await Note.deleteMany();
 
   // eslint-disable-next-line no-restricted-syntax
   for (const note of initialNotes) {
-    const noteObject = new Note(note);
+    const noteObject = new Note({
+      ...note,
+      user: user._id,
+    });
+    console.log('noteObject: ', noteObject);
     // eslint-disable-next-line no-await-in-loop
     await noteObject.save();
   }
@@ -34,9 +47,14 @@ test('the first note is about FullStack', async () => {
 
 describe('create a note', () => {
   test('a valid note can be added', async () => {
+    const passwordHash = await bcrypt.hash('pswd', 10);
+    const user = new User({ username: 'gato', passwordHash });
+    await user.save();
+
     const newNote = {
       content: 'Proximamente async/await',
       important: true,
+      userId: user._id,
     };
 
     await api
