@@ -1,9 +1,9 @@
 POST http://localhost:3001/api/notes
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyZGYyYjlhOWZlNmQ3MGMwNGE3M2Q3MyIsInVzZXJuYW1lIjoiYmVuamluaG8iLCJpYXQiOjE2NTg5NDM5OTAsImV4cCI6MTY2MTUzNTk5MH0.bFLDbt19K3uIiu2X2Vuokghv16e0lurUEq4EkQC1Pkc
 
 {
-  "content": "this a new note",
-  "userId": "62df2b9a9fe6d70c04a73d73"
+  "content": "this a new note"
 }
 
 ###
@@ -24,3 +24,11 @@ Content-Type: application/json
   "content": "random note",
   "important": true
 }
+
+###
+
+POST http://localhost:3001/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyZGYyYjlhOWZlNmQ3MGMwNGE3M2Q3MyIsInVzZXJuYW1lIjoiYmVuamluaG8iLCJpYXQiOjE2NTg4OTA3NDQsImV4cCI6MTY1ODg5NDM0NH0.bu9bYLQMBtlE7tDSUy_WzbnsC9snoK7xEaAu6_C6Olw
+
+{}
